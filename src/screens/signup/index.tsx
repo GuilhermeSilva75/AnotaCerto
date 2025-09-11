@@ -1,8 +1,19 @@
 import colors from '@/src/constants/colors';
+import { SignUpFormData } from '@/src/hooks/useSigup';
 import { Link } from 'expo-router';
+import { Control, Controller, FieldErrors, UseFormHandleSubmit } from 'react-hook-form';
 import { ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function SignUpScreen() {
+
+interface SignUpScreenProps {
+    control: Control<SignUpFormData>;
+    handleSubmit: UseFormHandleSubmit<SignUpFormData>;
+    onSubmit: (data: SignUpFormData) => Promise<void>;
+    isSubmitting: boolean;
+    errors: FieldErrors<SignUpFormData>;
+}
+
+export default function SignUpScreen({ control, errors, handleSubmit, isSubmitting, onSubmit }: SignUpScreenProps) {
     return (
         <ScrollView
             style={{ backgroundColor: colors.white }}
@@ -16,24 +27,69 @@ export default function SignUpScreen() {
                     AnotaCerto
                 </Text>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder='Nome'
-                    autoCapitalize='none'
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder='Email'
-                    autoCapitalize='none'
-                />
-
-                <TextInput
-                    style={styles.input}
-                    placeholder='Senha'
-                    autoCapitalize='none'
+                <Controller
+                    control={control}
+                    name='username'
+                    defaultValue=''
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Nome'
+                            value={value}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                        />
+                    )}
                 />
 
-                <TouchableOpacity style={styles.btnLogin}>
+                <Controller
+                    control={control}
+                    name='email'
+                    defaultValue=''
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Email'
+                            autoCapitalize='none'
+                            value={value}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                        />
+                    )}
+                />
+
+                <Controller
+                    control={control}
+                    name='password'
+                    defaultValue=''
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Senha'
+                            autoCapitalize='none'
+                            value={value}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                        />
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name='confirmPassword'
+                    defaultValue=''
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Confirmar Senha'
+                            autoCapitalize='none'
+                            value={value}
+                            onBlur={onBlur}
+                            onChangeText={onChange}
+                        />
+                    )}
+                />
+
+                <TouchableOpacity style={styles.btnLogin} onPress={handleSubmit(onSubmit)}>
                     <Text style={styles.textButton}>Criar conta</Text>
                 </TouchableOpacity>
 

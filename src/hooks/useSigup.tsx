@@ -1,0 +1,52 @@
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import { z } from 'zod';
+import { authService } from "../services/auth-services";
+
+const signUpSchema = z.object({
+    username: z.string().min(1, "O nome de usuário é obrigatório"),
+    email: z.string().email("Digite um email válido").min(1, "O email é obrigatório"),
+    password: z.string().min(4, "Senha deve ter pelo menos 6 caracteres."),
+    confirmPassword: z.string().nonempty("Confirmação da senha é obrigatória")
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "As senhas devem ser iguais",
+    path: ["confirmPassword"]
+})
+
+
+export type SignUpFormData = z.infer<typeof signUpSchema>
+
+const useSignup = () => {
+
+    const {
+        control,
+        handleSubmit,
+        formState: { errors, isSubmitting }
+    } = useForm<SignUpFormData>({
+        resolver: zodResolver(signUpSchema)
+    })
+
+    const onSubmit = async (data: SignUpFormData) => {
+        try {
+            await authService.signup(data.email, data.password, data.username)
+        } catch (err) {
+            console.log("FALHA AO CRIAR USUARIO")
+            console.log(err);
+        }
+
+    }
+
+
+    return {
+        onSubmit,
+        control,
+        handleSubmit,
+        errors,
+        isSubmitting
+    }
+}
+
+
+
+
+export default useSignup;
