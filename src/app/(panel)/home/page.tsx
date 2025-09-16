@@ -1,17 +1,13 @@
-import { StyleSheet, Text, View } from 'react-native';
+import useProfile from "@/src/hooks/useProfile";
+import HomeScreen from "@/src/screens/home";
 
 export default function Home() {
- return (
-   <View style={styles.container}>
-    <Text>pagina home</Text>
-   </View>
+
+  const { logout } = useProfile()
+
+  return (
+    <HomeScreen
+      logout={logout}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-})

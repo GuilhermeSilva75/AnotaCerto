@@ -1,8 +1,18 @@
 import colors from '@/src/constants/colors';
+import { SignInFormData } from '@/src/hooks/useSignIn';
 import { Link } from 'expo-router';
+import { Control, Controller, FieldErrors, UseFormHandleSubmit } from 'react-hook-form';
 import { ScrollView, StatusBar, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-export default function SignInScreen() {
+interface SignInScreenProps {
+    control: Control<SignInFormData>;
+    handleSubmit: UseFormHandleSubmit<SignInFormData>;
+    onSubmit: (data: SignInFormData) => Promise<void>;
+    isSubmitting: boolean;
+    errors: FieldErrors<SignInFormData>;
+}
+
+export default function SignInScreen({ control, errors, handleSubmit, isSubmitting, onSubmit }: SignInScreenProps) {
     return (
         <ScrollView
             style={{ backgroundColor: colors.white }}
@@ -16,20 +26,43 @@ export default function SignInScreen() {
                     AnotaCerto
                 </Text>
 
-                <TextInput
-                    style={styles.input}
-                    placeholder='Digite seu email...'
-                    autoCapitalize='none'
+                <Controller
+                    control={control}
+                    name='email'
+                    defaultValue=''
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Digite seu email...'
+                            onChangeText={onChange}
+                            value={value}
+                            onBlur={onBlur}
+                            autoCapitalize='none'
+                        />
+                    )}
                 />
 
-                <TextInput
-                    style={styles.input}
-                    placeholder='Senha'
-                    autoCapitalize='none'
+                <Controller
+                    control={control}
+                    name='password'
+                    defaultValue=''
+                    render={({ field: { onChange, onBlur, value } }) => (
+                        <TextInput
+                            style={styles.input}
+                            placeholder='Senha'
+                            secureTextEntry={true}
+                            onChangeText={onChange}
+                            value={value}
+                            onBlur={onBlur}
+                            autoCapitalize='none'
+                        />
+                    )}
                 />
 
-                <TouchableOpacity style={styles.btnLogin}>
-                    <Text style={styles.textButton}>Entrar</Text>
+                <TouchableOpacity style={styles.btnLogin} onPress={handleSubmit(onSubmit)}>
+                    <Text style={styles.textButton}>
+                        {isSubmitting ? "Carregando..." : "Entrar"}
+                    </Text>
                 </TouchableOpacity>
 
                 <Link href="/(auth)/signup/page">

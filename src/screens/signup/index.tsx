@@ -90,7 +90,9 @@ export default function SignUpScreen({ control, errors, handleSubmit, isSubmitti
                 />
 
                 <TouchableOpacity style={styles.btnLogin} onPress={handleSubmit(onSubmit)}>
-                    <Text style={styles.textButton}>Criar conta</Text>
+                    <Text style={styles.textButton}>
+                        {isSubmitting ? "Carregando..." : "Criar conta"}
+                    </Text>
                 </TouchableOpacity>
 
                 <Link href="/(auth)/signin/page">
