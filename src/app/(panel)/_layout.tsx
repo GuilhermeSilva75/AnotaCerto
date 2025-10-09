@@ -10,6 +10,14 @@ export default function PanelLayout() {
             <Stack.Screen
                 name="home/page"
             />
+
+            <Stack.Screen
+                name="profile/page"
+            />
+
+            <Stack.Screen
+                name="new/page"
+            />
         </Stack>
     )
 }
