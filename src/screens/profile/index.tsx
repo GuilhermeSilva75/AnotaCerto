@@ -4,7 +4,11 @@ import { Link } from 'expo-router';
 import { Platform, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function ProfileScreen() {
+interface ProfileProps {
+  logout: () => Promise<void>
+}
+
+export default function ProfileScreen({ logout }: ProfileProps) {
   return (
     <SafeAreaView style={styles.safearea}>
       <View style={styles.container}>
@@ -18,7 +22,7 @@ export default function ProfileScreen() {
         </View>
 
         <View>
-          <TouchableOpacity style={styles.button}>
+          <TouchableOpacity style={styles.button} onPress={logout}>
             <Text style={styles.buttonText}>Sair</Text>
           </TouchableOpacity>
         </View>

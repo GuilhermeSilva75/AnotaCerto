@@ -1,10 +1,20 @@
 import colors from '@/src/constants/colors';
+import { ClientFromData } from '@/src/hooks/useCreateClient';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link } from 'expo-router';
+import { Control, Controller, FieldErrors, UseFormHandleSubmit } from 'react-hook-form';
 import { Platform, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-export default function NewClient() {
+interface ClientScreenProps {
+  control: Control<ClientFromData>;
+  handleSubmit: UseFormHandleSubmit<ClientFromData>;
+  createClient: (data: ClientFromData) => Promise<void>;
+  isSubmitting: boolean;
+  errors: FieldErrors<ClientFromData>;
+}
+
+export default function NewClient({ control, errors, handleSubmit, isSubmitting, createClient }: ClientScreenProps) {
   return (
     <SafeAreaView style={styles.safearea}>
       <View style={styles.container}>
@@ -18,12 +28,27 @@ export default function NewClient() {
         </View>
 
         <View>
-          <TextInput
-            style={styles.input}
-            placeholder='Nome do cliente...'
+          <Controller
+            control={control}
+            name='name'
+            defaultValue=''
+            render={({ field: { onBlur, onChange, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder='Nome do cliente...'
+                onBlur={onBlur}
+                onChangeText={onChange}
+                value={value}
+                placeholderTextColor={colors.gray1}
+              />
+            )}
           />
 
-          <TouchableOpacity style={styles.button}>
+
+          <TouchableOpacity 
+          style={styles.button}
+          onPress={handleSubmit(createClient)}
+          >
             <Text style={styles.buttonText}>Registrar</Text>
           </TouchableOpacity>
         </View>
@@ -54,7 +79,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    marginTop: 16,
+    marginTop: 20,
     marginBottom: 10,
     borderRadius: 8,
     paddingLeft: 8
