@@ -2,11 +2,18 @@ import colors from '@/src/constants/colors';
 import { Feather } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link } from 'expo-router';
-import { Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { FlatList, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import { Client } from '@/src/hooks/useClientList';
 
-export default function HomeScreen() {
+interface HomeScreenProps {
+    loading: boolean;
+    clients: Client[]
+}
+
+
+export default function HomeScreen({ clients, loading }: HomeScreenProps) {
     return (
         <SafeAreaView style={styles.safearea}>
             <View style={styles.container}>
@@ -29,6 +36,37 @@ export default function HomeScreen() {
                     </TouchableOpacity>
 
                 </View>
+
+
+
+                {clients.length > 0 && (
+                    <>
+                        <Text style={styles.titleList}>
+                            Lista de Clientes:
+                        </Text>
+                        <FlatList
+                            data={clients}
+                            keyExtractor={(item) => item.id}
+                            renderItem={({ item }) => (
+                                <View style={styles.areaClient}>
+                                    <View style={styles.rowClient}>
+
+                                        <View style={styles.iconClient}>
+                                            <Feather name="user" size={40} color="black" />
+                                        </View>
+
+                                        <View style={styles.clientInfo}>
+                                            <Text style={styles.labelClient}>{item.name}</Text>
+                                            <Text style={styles.labelSaldo}>
+                                                {item.saldo.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2})}
+                                                </Text>
+                                        </View>
+                                    </View>
+                                </View>
+                            )}
+                        />
+                    </>
+                )}
             </View>
         </SafeAreaView>
     );
@@ -71,5 +109,45 @@ const styles = StyleSheet.create({
     buttonText: {
         color: colors.white,
         fontWeight: 'bold'
+    },
+    titleList: {
+        fontWeight: 'bold',
+        fontSize: 24,
+        color: colors.black,
+        paddingTop: 26
+    },
+    areaClient: {
+        paddingTop: 26,
+        borderBottomWidth: 1,
+        borderBottomColor: colors.gray2,
+        paddingBottom: 16
+    },
+    rowClient: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 12
+    },
+    iconClient: {
+        width: 70,
+        height: 70,
+        backgroundColor: colors.gray2,
+        borderRadius: 40,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    clientInfo: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        flex: 1
+    },
+    labelClient: {
+        fontSize: 20,
+        fontWeight: '400',
+        color: colors.black
+    },
+    labelSaldo: {
+        fontSize: 20,
+        fontWeight: '500',
+        color: colors.black
     }
 })

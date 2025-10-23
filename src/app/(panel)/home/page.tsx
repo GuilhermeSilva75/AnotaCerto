@@ -1,13 +1,14 @@
-import useProfile from "@/src/hooks/useProfile";
+import useClientList from "@/src/hooks/useClientList";
 import HomeScreen from "@/src/screens/home";
 
 export default function Home() {
 
-  const { logout } = useProfile()
+  const { clients, loading } = useClientList()
 
   return (
     <HomeScreen
-      logout={logout}
+      clients={clients}
+      loading={loading}
     />
   );
 }
