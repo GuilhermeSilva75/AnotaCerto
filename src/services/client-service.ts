@@ -5,9 +5,9 @@ export type CreateClientPayload = {
 }
 
 export type Client = {
-    id: string,
-    name: string,
-    created_at: string,
+    id: string;
+    name: string;
+    created_at: string;
     saldo: number;
 }
 
@@ -37,6 +37,20 @@ export const clientService = {
         if (error) throw error
 
         return data
+    },
+
+    getClientById: async (client_id: string): Promise<Client> => {
+        const { data, error } = await supabase
+            .from("clients")
+            .select("*")
+            .eq("id", client_id)
+            .single()
+
+        if (error) throw error
+
+        
+
+        return data;
     }
 
 }

@@ -1,7 +1,7 @@
 import colors from '@/src/constants/colors';
 import { Feather } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { FlatList, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
@@ -14,6 +14,9 @@ interface HomeScreenProps {
 
 
 export default function HomeScreen({ clients, loading }: HomeScreenProps) {
+
+    const router  = useRouter()
+
     return (
         <SafeAreaView style={styles.safearea}>
             <View style={styles.container}>
@@ -56,7 +59,13 @@ export default function HomeScreen({ clients, loading }: HomeScreenProps) {
                                         </View>
 
                                         <View style={styles.clientInfo}>
-                                            <Text style={styles.labelClient}>{item.name}</Text>
+                                            <TouchableOpacity
+                                            activeOpacity={1}
+                                            onPress={() => router.push(`/detail/${item.id}`)}
+                                            >
+                                                <Text style={styles.labelClient}>{item.name}</Text>
+                                            </TouchableOpacity>
+                                        
                                             <Text style={styles.labelSaldo}>
                                                 {item.saldo.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2})}
                                                 </Text>

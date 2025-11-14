@@ -18,6 +18,10 @@ export default function PanelLayout() {
             <Stack.Screen
                 name="new/page"
             />
+
+            <Stack.Screen
+                name="detail/[id]"
+            />
         </Stack>
     )
 }
