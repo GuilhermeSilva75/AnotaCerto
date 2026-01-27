@@ -48,9 +48,15 @@ export const clientService = {
 
         if (error) throw error
 
-        
+
 
         return data;
+    },
+
+    deleteClient: async (client_id: string) => {
+        const { error } = await supabase.from("clients").delete().eq("id", client_id)
+
+        if (error) throw error
     }
 
 }

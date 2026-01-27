@@ -2,7 +2,7 @@ import colors from '@/src/constants/colors';
 import { Feather } from '@expo/vector-icons';
 import AntDesign from '@expo/vector-icons/AntDesign';
 import { Link, useRouter } from 'expo-router';
-import { FlatList, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, FlatList, Platform, StatusBar, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { Client } from '@/src/hooks/useClientList';
@@ -10,12 +10,21 @@ import { Client } from '@/src/hooks/useClientList';
 interface HomeScreenProps {
     loading: boolean;
     clients: Client[]
+    handleDeleteClient: () => Promise<void>
 }
 
 
-export default function HomeScreen({ clients, loading }: HomeScreenProps) {
+export default function HomeScreen({ clients, loading, handleDeleteClient }: HomeScreenProps) {
 
-    const router  = useRouter()
+    const router = useRouter()
+
+    if (loading) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size='large' color={colors.black} />
+            </View>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.safearea}>
@@ -60,15 +69,12 @@ export default function HomeScreen({ clients, loading }: HomeScreenProps) {
 
                                         <View style={styles.clientInfo}>
                                             <TouchableOpacity
-                                            activeOpacity={1}
-                                            onPress={() => router.push(`/detail/${item.id}`)}
+                                                activeOpacity={1}
+                                                onPress={() => router.push(`/detail/${item.id}`)}
+                                                onLongPress={async () => await handleDeleteClient()}
                                             >
                                                 <Text style={styles.labelClient}>{item.name}</Text>
                                             </TouchableOpacity>
-                                        
-                                            <Text style={styles.labelSaldo}>
-                                                {item.saldo.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL', minimumFractionDigits: 2})}
-                                                </Text>
                                         </View>
                                     </View>
                                 </View>
